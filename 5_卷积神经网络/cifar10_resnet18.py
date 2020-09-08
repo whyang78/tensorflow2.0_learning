@@ -44,15 +44,17 @@ class BasicBlock(keras.layers.Layer):
     def __init__(self,filter_num,stride=1):
         super(BasicBlock, self).__init__()
         self.left=keras.Sequential([
-            keras.layers.Conv2D(filter_num,kernel_size=3,strides=stride,padding='same'),
+            keras.layers.Conv2D(filter_num,kernel_size=3,strides=stride,padding='same',use_bias=False),
             keras.layers.BatchNormalization(),
             keras.layers.ReLU(),
-            keras.layers.Conv2D(filter_num,kernel_size=3,strides=1,padding='same'),
+            keras.layers.Conv2D(filter_num,kernel_size=3,strides=1,padding='same',use_bias=False),
             keras.layers.BatchNormalization()
         ])
 
         if stride!=1:
-            self.short_cut=keras.layers.Conv2D(filter_num,kernel_size=1,strides=stride,padding='same')
+            self.short_cut=keras.Sequential([
+	keras.layers.Conv2D(filter_num,kernel_size=1,strides=stride,padding='same',use_bias=False),
+	keras.layers.BatchNormalization()])
         else:
             self.short_cut=lambda x:x
 
